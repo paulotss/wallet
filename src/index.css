@@ -39,3 +39,11 @@ code {
   flex-flow: row wrap;
   justify-content: space-between;
 }
+
+#registration-form {
+  padding: 10px;
+  background-color: cadetblue;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+}

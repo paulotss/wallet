@@ -1,6 +1,7 @@
 export const LOGIN = 'LOGIN';
 export const GET_CURRENCIES = 'GET_CURRENCIES';
 export const ADD_EXPENSE = 'ADD_EXPENSE';
+export const DELETE_EXPENSE = 'DELETE_EXPENSE';
 
 export const userLoginAction = (email) => (
   {
@@ -17,6 +18,11 @@ const getCurrencies = (currencies) => ({
 const addExpenseAction = (expense) => ({
   type: ADD_EXPENSE,
   payload: expense,
+});
+
+export const deleteExpenseAction = (id) => ({
+  type: DELETE_EXPENSE,
+  payload: id,
 });
 
 export const getCurrenciesThunk = () => async (dispatch) => {

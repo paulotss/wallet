@@ -1,13 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { getCurrenciesThunk, addExpenseThunk } from '../actions';
+import { getCurrenciesThunk, addExpenseThunk, deleteExpenseAction } from '../actions';
 
 class Wallet extends React.Component {
   constructor() {
     super();
     this.handleClick = this.handleClick.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.deleteClick = this.deleteClick.bind(this);
 
     this.state = {
       id: 0,
@@ -37,6 +38,11 @@ class Wallet extends React.Component {
       id: prevState.id + 1,
       value: '',
     }));
+  }
+
+  deleteClick({ target: { name } }) {
+    const { deleteExpense } = this.props;
+    deleteExpense(Number(name));
   }
 
   render() {
@@ -152,8 +158,8 @@ class Wallet extends React.Component {
           </thead>
           <tbody>
             {
-              expenses.map((exp, key) => (
-                <tr key={ key }>
+              expenses.map((exp) => (
+                <tr key={ exp.id }>
                   <td>{ exp.description }</td>
                   <td>{ exp.tag }</td>
                   <td>{ exp.method }</td>
@@ -167,7 +173,16 @@ class Wallet extends React.Component {
                     }
                   </td>
                   <td>Real</td>
-                  <td>Edição</td>
+                  <td>
+                    <button
+                      type="button"
+                      name={ exp.id }
+                      data-testid="delete-btn"
+                      onClick={ this.deleteClick }
+                    >
+                      Excluir
+                    </button>
+                  </td>
                 </tr>
               ))
             }
@@ -184,6 +199,7 @@ Wallet.propTypes = {
   expenses: PropTypes.instanceOf(Array).isRequired,
   getCurrencies: PropTypes.func.isRequired,
   addExpense: PropTypes.func.isRequired,
+  deleteExpense: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -195,6 +211,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   getCurrencies: () => dispatch(getCurrenciesThunk()),
   addExpense: (expense) => dispatch(addExpenseThunk(expense)),
+  deleteExpense: (id) => dispatch(deleteExpenseAction(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Wallet);

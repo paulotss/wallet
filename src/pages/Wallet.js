@@ -50,7 +50,13 @@ class Wallet extends React.Component {
             Despesas totais:
             {' '}
             <span data-testid="total-field">
-              { expenses.toFixed(2) }
+              {
+                expenses.reduce(
+                  (acc, exp) => (
+                    acc + exp.value * Number(exp.exchangeRates[exp.currency].ask)
+                  ), 0,
+                ).toFixed(2)
+              }
             </span>
           </div>
           <div>
@@ -144,6 +150,28 @@ class Wallet extends React.Component {
               <th>Editar/Excluir</th>
             </tr>
           </thead>
+          <tbody>
+            {
+              expenses.map((exp, key) => (
+                <tr key={ key }>
+                  <td>{ exp.description }</td>
+                  <td>{ exp.tag }</td>
+                  <td>{ exp.method }</td>
+                  <td>{ Number(exp.value).toFixed(2) }</td>
+                  <td>{ exp.exchangeRates[exp.currency].name.split('/')[0] }</td>
+                  <td>{ Number(exp.exchangeRates[exp.currency].ask).toFixed(2) }</td>
+                  <td>
+                    {
+                      (Number(exp.value) * Number(exp.exchangeRates[exp.currency].ask))
+                        .toFixed(2)
+                    }
+                  </td>
+                  <td>Real</td>
+                  <td>Edição</td>
+                </tr>
+              ))
+            }
+          </tbody>
         </table>
       </>
     );
@@ -153,7 +181,7 @@ class Wallet extends React.Component {
 Wallet.propTypes = {
   email: PropTypes.string.isRequired,
   currencies: PropTypes.instanceOf(Array).isRequired,
-  expenses: PropTypes.number.isRequired,
+  expenses: PropTypes.instanceOf(Array).isRequired,
   getCurrencies: PropTypes.func.isRequired,
   addExpense: PropTypes.func.isRequired,
 };
@@ -161,9 +189,7 @@ Wallet.propTypes = {
 const mapStateToProps = (state) => ({
   email: state.user.email,
   currencies: state.wallet.currencies,
-  expenses: state.wallet.expenses.reduce(
-    (acc, exp) => acc + exp.value * Number(exp.exchangeRates[exp.currency].ask), 0,
-  ),
+  expenses: state.wallet.expenses,
 });
 
 const mapDispatchToProps = (dispatch) => ({

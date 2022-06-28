@@ -1,14 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { getCurrenciesThunk, addExpenseThunk, deleteExpenseAction } from '../actions';
+import {
+  getCurrenciesThunk,
+  addExpenseThunk,
+  deleteExpenseAction,
+  editExpenseAction,
+} from '../actions';
+import TableExpenses from '../components/TableExpenses';
+import TAG from '../consts';
 
 class Wallet extends React.Component {
   constructor() {
     super();
-    this.handleClick = this.handleClick.bind(this);
+    this.hClick = this.hClick.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.deleteClick = this.deleteClick.bind(this);
+    this.editClick = this.editClick.bind(this);
 
     this.state = {
       id: 0,
@@ -16,7 +24,8 @@ class Wallet extends React.Component {
       description: '',
       currency: 'USD',
       method: 'Dinheiro',
-      tag: 'Alimentação',
+      tag: TAG,
+      isEdit: false,
     };
   }
 
@@ -31,13 +40,30 @@ class Wallet extends React.Component {
     });
   }
 
-  handleClick() {
-    const { addExpense } = this.props;
-    addExpense(this.state);
-    this.setState((prevState) => ({
-      id: prevState.id + 1,
-      value: '',
-    }));
+  hClick() {
+    const { isEdit } = this.state;
+    if (isEdit) {
+      const { expenses, editExpense } = this.props;
+      editExpense(this.state);
+      const lastExpense = expenses[expenses.length - 1];
+      this.setState({
+        id: lastExpense.id + 1,
+        value: 0,
+        description: '',
+        currency: 'USD',
+        method: 'Dinheiro',
+        tag: TAG,
+        isEdit: false,
+      });
+    } else {
+      const { addExpense } = this.props;
+      const { id, value, description, currency, method, tag } = this.state;
+      addExpense({ id, value, description, currency, method, tag });
+      this.setState((prevState) => ({
+        id: prevState.id + 1,
+        value: 0,
+      }));
+    }
   }
 
   deleteClick({ target: { name } }) {
@@ -45,9 +71,26 @@ class Wallet extends React.Component {
     deleteExpense(Number(name));
   }
 
+  editClick({ target: { name } }) {
+    const id = Number(name);
+    const { expenses } = this.props;
+    console.log(expenses);
+    const edit = expenses.find((exp) => exp.id === id);
+    console.log(edit);
+    this.setState({
+      id,
+      value: Number(edit.value),
+      description: edit.description,
+      currency: edit.currency,
+      method: edit.method,
+      tag: edit.tag,
+      isEdit: true,
+    });
+  }
+
   render() {
     const { email, currencies, expenses } = this.props;
-    const { value, description, currency, method, tag } = this.state;
+    const { value, description, currency, method, tag, isEdit } = this.state;
     return (
       <>
         <header id="header">
@@ -133,61 +176,24 @@ class Wallet extends React.Component {
               value={ tag }
               onChange={ this.handleChange }
             >
-              <option>Alimentação</option>
+              <option>{ TAG }</option>
               <option>Lazer</option>
               <option>Trabalho</option>
               <option>Transporte</option>
               <option>Saúde</option>
             </select>
           </label>
-          <button type="button" onClick={ this.handleClick }>Adicionar despesa</button>
+          {
+            isEdit
+              ? <button type="button" onClick={ this.hClick }>Editar despesa</button>
+              : <button type="button" onClick={ this.hClick }>Adicionar despesa</button>
+          }
         </section>
-        <table>
-          <thead>
-            <tr>
-              <th>Descrição</th>
-              <th>Tag</th>
-              <th>Método de pagamento</th>
-              <th>Valor</th>
-              <th>Moeda</th>
-              <th>Câmbio utilizado</th>
-              <th>Valor convertido</th>
-              <th>Moeda de conversão</th>
-              <th>Editar/Excluir</th>
-            </tr>
-          </thead>
-          <tbody>
-            {
-              expenses.map((exp) => (
-                <tr key={ exp.id }>
-                  <td>{ exp.description }</td>
-                  <td>{ exp.tag }</td>
-                  <td>{ exp.method }</td>
-                  <td>{ Number(exp.value).toFixed(2) }</td>
-                  <td>{ exp.exchangeRates[exp.currency].name.split('/')[0] }</td>
-                  <td>{ Number(exp.exchangeRates[exp.currency].ask).toFixed(2) }</td>
-                  <td>
-                    {
-                      (Number(exp.value) * Number(exp.exchangeRates[exp.currency].ask))
-                        .toFixed(2)
-                    }
-                  </td>
-                  <td>Real</td>
-                  <td>
-                    <button
-                      type="button"
-                      name={ exp.id }
-                      data-testid="delete-btn"
-                      onClick={ this.deleteClick }
-                    >
-                      Excluir
-                    </button>
-                  </td>
-                </tr>
-              ))
-            }
-          </tbody>
-        </table>
+        <TableExpenses
+          expenses={ expenses }
+          editClick={ this.editClick }
+          deleteClick={ this.deleteClick }
+        />
       </>
     );
   }
@@ -200,6 +206,7 @@ Wallet.propTypes = {
   getCurrencies: PropTypes.func.isRequired,
   addExpense: PropTypes.func.isRequired,
   deleteExpense: PropTypes.func.isRequired,
+  editExpense: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -212,6 +219,7 @@ const mapDispatchToProps = (dispatch) => ({
   getCurrencies: () => dispatch(getCurrenciesThunk()),
   addExpense: (expense) => dispatch(addExpenseThunk(expense)),
   deleteExpense: (id) => dispatch(deleteExpenseAction(id)),
+  editExpense: (expense) => dispatch(editExpenseAction(expense)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Wallet);

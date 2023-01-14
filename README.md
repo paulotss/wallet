@@ -2,8 +2,6 @@
 
 Carteira de controle de gastos com conversor de moedas. Esse projeto foi feito como parte do curso da Trybe.
 
-## Demonstração
-
 ![Demonstração](/walletdemo.png "Wallet")
 
 ## Tecnologias
@@ -23,6 +21,7 @@ Carteira de controle de gastos com conversor de moedas. Esse projeto foi feito c
 ## Execução
 
 `` npm install ``
+
 `` npm start ``
 
 <!-- Olá, Tryber!

@@ -1,6 +1,10 @@
 # Wallet
 
-Carteira de controle de gastos com conversor de moedas. Esse projeto foi feito como parte do curso da Trybe.
+Carteira de controle de gastos com conversor de moedas. Esse projeto foi feito como parte do curso da Trybe. Ao utilizar essa aplicação um usuário deverá ser capaz de:
+
+- Adicionar, remover e editar um gasto;
+- Visualizar uma tabelas com seus gastos;
+- Visualizar o total de gastos convertidos para uma moeda de escolha.
 
 ![Demonstração](/walletdemo.png "Wallet")
 

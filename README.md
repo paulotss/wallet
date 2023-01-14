@@ -2,6 +2,10 @@
 
 Carteira de controle de gastos com conversor de moedas. Esse projeto foi feito como parte do curso da Trybe.
 
+## Demonstração
+
+![Demonstração](/walletdemo.gif "Wallet")
+
 ## Tecnologias
 
 <div style="display: inline">
@@ -15,6 +19,11 @@ Carteira de controle de gastos com conversor de moedas. Esse projeto foi feito c
 
 <img src="https://img.shields.io/badge/Redux-593D88?style=for-the-badge&logo=redux&logoColor=white">
 </div>
+
+## Execução
+
+`` npm install ``
+`` npm start ``
 
 <!-- Olá, Tryber!
 Esse é apenas um arquivo inicial para o README do seu projeto no qual você pode customizar e reutilizar todas as vezes que for executar o trybe-publisher.

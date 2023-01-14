@@ -5,7 +5,7 @@ class TableExpenses extends React.Component {
   render() {
     const { expenses, deleteClick, editClick } = this.props;
     return (
-      <table>
+      <table className="table">
         <thead>
           <tr>
             <th>Descrição</th>

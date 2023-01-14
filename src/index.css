@@ -47,3 +47,19 @@ code {
   flex-flow: row wrap;
   justify-content: space-between;
 }
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table td, .table th {
+  border-bottom: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.table tr:hover {
+  background-color: #ddd;
+  cursor: pointer;
+}

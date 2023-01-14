@@ -4,7 +4,7 @@ Carteira de controle de gastos com conversor de moedas. Esse projeto foi feito c
 
 ## Demonstração
 
-![Demonstração](/walletdemo.gif "Wallet")
+![Demonstração](/walletdemo.png "Wallet")
 
 ## Tecnologias
 
